@@ -41,7 +41,7 @@ public class GeneroServlet extends HttpServlet {
             request.getRequestDispatcher("Views/Genero/index.jsp").forward(request, response);
         } catch (Exception ex) {
             Utilidad.enviarError(ex.getMessage(), request, response);
-        }`19075000
+        }
 
     }
     
