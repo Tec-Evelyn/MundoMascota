@@ -1,90 +1,157 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="mundomascota.entidadesdenegocio.Usuario"%>
-<% Usuario usuario = (Usuario) request.getAttribute("usuario");%>
+<%@page import="mundomascota.entidadesdenegocio.Rol"%>
+<%@page import="java.util.ArrayList"%>
+<% ArrayList<Usuario> usuarios = (ArrayList<Usuario>) request.getAttribute("usuarios");
+    int numPage = 1;
+    int numReg = 10;
+    int countReg = 0;
+    if (usuarios == null) {
+        usuarios = new ArrayList();
+    } else if (usuarios.size() > numReg) {
+        double divNumPage = (double) usuarios.size() / (double) numReg;
+        numPage = (int) Math.ceil(divNumPage);
+    }
+    String strTop_aux = request.getParameter("top_aux");
+    int top_aux = 10;
+    if (strTop_aux != null && strTop_aux.trim().length() > 0) {
+        top_aux = Integer.parseInt(strTop_aux);
+    }
+%>
 
 <!DOCTYPE html>
 <html>
     <head>        
         <jsp:include page="/Views/Shared/title.jsp" />
-        <title>Editar Usuario</title>
+        <title>Lista de Usuarios</title>
+
     </head>
     <body>
         <jsp:include page="/Views/Shared/headerBody.jsp" />  
         <main class="container">   
-            <h5>Editar Usuario</h5>
-            <form action="Usuario" method="post" onsubmit="return  validarFormulario()">
+            <h5>Usuario</h5>
+            <form action="Usuario" method="post">
                 <input type="hidden" name="accion" value="<%=request.getAttribute("accion")%>"> 
-                <input type="hidden" name="id" value="<%=usuario.getId()%>">  
                 <div class="row">
                     <div class="input-field col l4 s12">
-                        <input  id="txtNombre" type="text" name="nombre" value="<%=usuario.getNombre()%>" required class="validate" maxlength="30">
+                        <input  id="txtNombre" type="text" name="nombre">
                         <label for="txtNombre">Nombre</label>
-                    </div>                       
+                    </div>  
                     <div class="input-field col l4 s12">
-                        <input  id="txtApellido" type="text" name="apellido" value="<%=usuario.getApellido()%>" required class="validate" maxlength="30">
+                        <input  id="txtApellido" type="text" name="apellido">
                         <label for="txtApellido">Apellido</label>
-                    </div> 
+                    </div>
                     <div class="input-field col l4 s12">
-                        <input  id="txtLogin" type="text" name="login" value="<%=usuario.getLogin()%>" required  class="validate" maxlength="25">
+                        <input  id="txtLogin" type="text" name="login">
                         <label for="txtLogin">Login</label>
                     </div>
                     <div class="input-field col l4 s12">
-                        <input  id="txtTelefono" type="text" name="telefono" value="<%=usuario.getTelefono()%>" required class="validate" maxlength="30">
+                        <input  id="txtTelefono" type="text" name="telefono">
                         <label for="txtTelefono">Telefono</label>
                     </div>
-                    <div class="input-field col l4 s12">
-                        <input  id="txtDireccion" type="text" name="direccion" value="<%=usuario.getDireccion()%>" required class="validate" maxlength="30">
+                    <!--<div class="input-field col l4 s12">
+                        <input  id="txtDireccion" type="text" name="direccion">
                         <label for="txtDireccion">Direccion</label>
-                    </div>
+                    </div>                    
                     <div class="input-field col l4 s12">   
-                        <select id="slEstatus" name="estatus" class="validate">
-                            <option value="0" <%=(usuario.getEstatus() == 10) ? "selected" : ""%>>SELECCIONAR</option>
-                            <option value="<%=Usuario.EstatusUsuario.ACTIVO%>"  <%=(usuario.getEstatus() == Usuario.EstatusUsuario.ACTIVO) ? "selected" : ""%>>ACTIVO</option>
-                            <option value="<%=Usuario.EstatusUsuario.INACTIVO%>"  <%=(usuario.getEstatus() == Usuario.EstatusUsuario.INACTIVO) ? "selected" : ""%>>INACTIVO</option>
+                        <select id="slEstatus" name="estatus">
+                            <option value="0">SELECCIONAR</option>
+                            <option value="<%=Usuario.EstatusUsuario.ACTIVO%>">ACTIVO</option>
+                            <option value="<%=Usuario.EstatusUsuario.INACTIVO%>">INACTIVO</option>
                         </select>       
                         <label for="slEstatus">Estatus</label>
-                        <span id="slEstatus_error" style="color:red" class="helper-text"></span>
-                    </div>
+                    </div>-->
                     <div class="input-field col l4 s12">   
                         <jsp:include page="/Views/Rol/select.jsp">                           
-                            <jsp:param name="id" value="<%=usuario.getIdRol() %>" />  
-                        </jsp:include>  
-                        <span id="slRol_error" style="color:red" class="helper-text"></span>
+                            <jsp:param name="id" value="0" />  
+                        </jsp:include>                        
                     </div>
+                    <div class="input-field col l4 s12">   
+                        <jsp:include page="/Views/Shared/selectTop.jsp">
+                            <jsp:param name="top_aux" value="<%=top_aux%>" />                        
+                        </jsp:include>                        
+                    </div> 
                 </div>
-
                 <div class="row">
                     <div class="col l12 s12">
-                        <button type="sutmit" class="waves-effect waves-light btn green"><i class="material-icons right">save</i>Guardar</button>
-                        <a href="Usuario" class="waves-effect waves-light btn grey"><i class="material-icons right">list</i>Cancelar</a>                          
+                        <button type="sutmit" class="waves-effect waves-light btn blue"><i class="material-icons right">search</i>Buscar</button>
+                        <a href="Usuario?accion=create" class="waves-effect waves-light btn grey"><i class="material-icons right">add</i>Crear</a>                          
                     </div>
                 </div>
-            </form>          
-        </main>
-                        
-        <jsp:include page="/Views/Shared/footerBody.jsp" />   
-        <script>
-            function validarFormulario() {
-                var result = true;
-                var slEstatus = document.getElementById("slEstatus");
-                var slEstatus_error = document.getElementById("slEstatus_error");
-                var slRol = document.getElementById("slRol");
-                var slRol_error = document.getElementById("slRol_error");
-                if (slEstatus.value == 0) {
-                    slEstatus_error.innerHTML = "El estatus es obligatorio";
-                    result = false;
-                } else {
-                    slEstatus_error.innerHTML = "";
-                }
-                if (slRol.value == 0) {
-                    slRol_error.innerHTML = "El Rol es obligatorio";
-                    result = false;
-                } else {
-                    slRol_error.innerHTML = "";
-                }
+            </form>
 
-                return result;
-            }
-        </script>
+            <div class="row">
+                <div class="col l12 s12">
+                    <div style="overflow: auto">
+                        <table class="paginationjs">
+                            <thead>
+                                <tr>                                     
+                                    <th>Nombre</th>  
+                                    <th>Apellido</th>                                    
+                                    <th>Login</th>
+                                    <th>Telefono</th>
+                                    <th>Direccion</th>                                    
+                                    <th>Estatus</th>  
+                                    <th>Rol</th>                                      
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>                       
+                            <tbody>                           
+                                <% for (Usuario usuario : usuarios) {
+                                        int tempNumPage = numPage;
+                                        if (numPage > 1) {
+                                            countReg++;
+                                            double divTempNumPage = (double) countReg / (double) numReg;
+                                            tempNumPage = (int) Math.ceil(divTempNumPage);
+                                        }
+                                        String estatus = "";
+                                        switch (usuario.getEstatus()) {
+                                            case Usuario.EstatusUsuario.ACTIVO:
+                                                estatus = "ACTIVO";
+                                                break;
+                                            case Usuario.EstatusUsuario.INACTIVO:
+                                                estatus = "INACTIVO";
+                                                break;
+                                            default:
+                                                estatus = "";
+                                        }
+                                %>
+                                <tr data-page="<%= tempNumPage%>">                                    
+                                    <td><%=usuario.getNombre()%></td>  
+                                    <td><%=usuario.getApellido()%></td>                                    
+                                    <td><%=usuario.getLogin()%></td>
+                                    <td><%=usuario.getTelefono()%></td>
+                                    <td><%=usuario.getDireccion()%></td>
+                                    <td><%=estatus%></td>
+                                    <td><%=usuario.getRol().getNombre()%></td>  
+                                    <td>
+                                        <div style="display:flex">
+                                             <a href="Usuario?accion=edit&id=<%=usuario.getId()%>" title="Modificar" class="waves-effect waves-light btn yellow">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                        <a href="Usuario?accion=details&id=<%=usuario.getId()%>" title="Ver" class="waves-effect waves-light btn blue">
+                                            <i class="material-icons">description</i>
+                                        </a>
+                                        <a href="Usuario?accion=delete&id=<%=usuario.getId()%>" title="Eliminar" class="waves-effect waves-light btn red">
+                                            <i class="material-icons">delete</i>
+                                        </a>    
+                                        </div>                                                                    
+                                    </td>                                   
+                                </tr>
+                                <%}%>                                                       
+                            </tbody>
+                        </table>
+                    </div>                  
+                </div>
+            </div>             
+            <div class="row">
+                <div class="col l12 s12">
+                    <jsp:include page="/Views/Shared/paginacion.jsp">
+                        <jsp:param name="numPage" value="<%= numPage%>" />                        
+                    </jsp:include>
+                </div>
+            </div>
+        </main>
+        <jsp:include page="/Views/Shared/footerBody.jsp" />      
     </body>
 </html>

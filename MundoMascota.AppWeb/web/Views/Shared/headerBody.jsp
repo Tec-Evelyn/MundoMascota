@@ -3,7 +3,7 @@
 <%@page import="jakarta.servlet.http.HttpServletRequest"%>
 
 <nav>
-    <div class="nav-wrapper black">
+    <div class="nav-wrapper 053B60">
         <a href="Home" class="brand-logo">Administración Refugio de Mascotas</a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>       
         <ul class="right hide-on-med-and-down">  
