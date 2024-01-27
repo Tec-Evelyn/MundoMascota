@@ -1,0 +1,40 @@
+body{
+    background-color: white;
+}
+table{
+    background-color: white;
+}
+
+thead{
+    background-color: black ;
+    color: white ;
+    border-bottom: solid 12px white; 
+}
+/*tr:nth-child(even){
+    background-color: white;
+ 
+}*/
+
+tr:hover td{
+    background-color: #ddd;/*#369681;*/
+    color: black; 
+    /*font-size: x-large;*/
+    cursor: pointer;
+    /*font-size: large;*/
+}
+p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h4{
+    font-weight: 500;
+    
+}
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

@@ -1,17 +1,15 @@
-<%-- 
-    Document   : select
-    Created on : 25 ene 2024, 23:12:12
-    Author     : Evelyn Liquez
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>
+<%@page import="mundomascota.entidadesdenegocio.Tipo"%>
+<%@page import="mundomascota.accesoadatos.TipoDAL"%>
+<%@page import="java.util.ArrayList"%>
+
+<% ArrayList<Tipo> tipos = TipoDAL.obtenerTodos();
+    int id = Integer.parseInt(request.getParameter("id"));
+%>
+<select id="slTipo" name="idTipo">
+    <option <%=(id == 0) ? "selected" : ""%>  value="0">SELECCIONAR</option>
+    <% for (Tipo tipo : tipos) {%>
+        <option <%=(id == tipo.getId()) ? "selected" : "" %>  value="<%=tipo.getId()%>"><%= tipo.getNombre()%></option>
+    <%}%>
+</select>
+<label for="idTipo">Tipo</label>
